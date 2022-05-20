@@ -14,7 +14,6 @@ go get -u github.com/aaabhilash97/lru
 package main
 
 import (
-	"fmt"
 	"log"
 	"time"
 
@@ -31,7 +30,7 @@ func main() {
 
 	_ = cache.Add("key", "text")
 	text, ok := cache.Get("key")
-	fmt.Println(text, ok)
+	log.Println(text, ok)
 }
 
 ```
