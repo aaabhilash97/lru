@@ -5,7 +5,7 @@ LRU cache package for golang with generic and expiry support.
 
 ### How to install package
 ```
-go get github.com/aaabhilash97/lru
+go get -u github.com/aaabhilash97/lru
 ```
 
 ### Usage 
