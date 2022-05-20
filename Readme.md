@@ -1,7 +1,7 @@
 This package is modification of https://github.com/projectdiscovery/expirablelru and "container/list" packages.
 
 
-LRU cache package for golang with generic support.
+LRU cache package for golang with generic and expiry support.
 
 ### How to install package
 ```
