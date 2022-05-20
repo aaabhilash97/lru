@@ -15,6 +15,7 @@ import (
 
 type GKT comparable
 type GVT any
+
 type Cache[KT GKT, VT GVT] struct {
 	size       int
 	purgeEvery time.Duration
