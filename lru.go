@@ -13,10 +13,7 @@ import (
 
 // Cache implements a thread safe LRU with expirable entries.
 
-type GKT comparable
-type GVT any
-
-type Cache[KT GKT, VT GVT] struct {
+type Cache[KT comparable, VT any] struct {
 	size       int
 	purgeEvery time.Duration
 	ttl        time.Duration
@@ -24,12 +21,12 @@ type Cache[KT GKT, VT GVT] struct {
 	onEvicted  func(key KT, value VT)
 
 	sync.Mutex
-	items     map[KT]*Element[KT, VT]
-	evictList *List[KT, VT]
+	items     map[KT]*Element[*expirableEntry[KT, VT]]
+	evictList *List[*expirableEntry[KT, VT]]
 }
 
 // expirableEntry is used to hold a value in the evictList
-type expirableEntry[KT GKT, VT GVT] struct {
+type expirableEntry[KT comparable, VT any] struct {
 	key       KT
 	value     VT
 	expiresAt time.Time
@@ -48,7 +45,7 @@ const noEvictionTTL = time.Hour * 24 * 365 * 10
 //
 // Activates deleteExpired by purgeEvery duration.
 // If MaxKeys and TTL are defined and PurgeEvery is zero, PurgeEvery will be set to 5 minutes.
-func NewLRU[KT GKT, VT GVT](size int, onEvict func(key KT, value VT), ttl, purgeEvery time.Duration) *Cache[KT, VT] {
+func NewLRU[KT comparable, VT any](size int, onEvict func(key KT, value VT), ttl, purgeEvery time.Duration) *Cache[KT, VT] {
 	if size < 0 {
 		size = 0
 	}
@@ -57,8 +54,8 @@ func NewLRU[KT GKT, VT GVT](size int, onEvict func(key KT, value VT), ttl, purge
 	}
 
 	res := Cache[KT, VT]{
-		items:      map[KT]*Element[KT, VT]{},
-		evictList:  NewList[KT, VT](),
+		items:      map[KT]*Element[*expirableEntry[KT, VT]]{},
+		evictList:  New[*expirableEntry[KT, VT]](),
 		ttl:        ttl,
 		purgeEvery: purgeEvery,
 		size:       size,
@@ -277,7 +274,7 @@ func (c *Cache[KT, VT]) keys() []KT {
 }
 
 // removeElement is used to remove a given list element from the cache. Has to be called with lock!
-func (c *Cache[KT, VT]) removeElement(e *Element[KT, VT]) {
+func (c *Cache[KT, VT]) removeElement(e *Element[*expirableEntry[KT, VT]]) {
 	c.evictList.Remove(e)
 	kv := e.Value
 	delete(c.items, kv.key)

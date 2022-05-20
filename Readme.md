@@ -14,16 +14,24 @@ go get github.com/aaabhilash97/lru
 package main
 
 import (
-    "github.com/aaabhilash97/lru"
-    "fmt"
+	"fmt"
+	"log"
+	"time"
+
+	"github.com/aaabhilash97/lru"
 )
 
-func main() {
-    var cache *lru.Cache[string, string]
-    cache = lru.NewLRU(100, evictCallback, time.Minute*30, time.Minute*45)
-
-    _ = cache.Add("key", "text")
-    text, ok := cache.Get(key)
-    fmt.Println(text)
+func evictCallback(key string, value string) {
+	log.Println(key, value)
 }
+
+func main() {
+	var cache *lru.Cache[string, string]
+	cache = lru.NewLRU(100, evictCallback, time.Minute*30, time.Minute*45)
+
+	_ = cache.Add("key", "text")
+	text, ok := cache.Get("key")
+	fmt.Println(text, ok)
+}
+
 ```
