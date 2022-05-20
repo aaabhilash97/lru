@@ -14,7 +14,7 @@ import (
 // Cache implements a thread safe LRU with expirable entries.
 
 type GKT comparable
-type GVT comparable
+type GVT any
 type Cache[KT GKT, VT GVT] struct {
 	size       int
 	purgeEvery time.Duration
