@@ -1,5 +1,5 @@
 This package is modification of https://github.com/projectdiscovery/expirablelru and "container/list" packages.
-
+Only difference is added generics support, so we can avoid type assertion.
 
 LRU cache package for golang with generic and expiry support.
 
